@@ -2,8 +2,6 @@
 //  GameViewController.swift
 //  scenedemo
 //
-//  Created by Joseph Bell on 3/6/15.
-//  Copyright (c) 2015 iAchieved.it, LLC. All rights reserved.
 //
 
 import UIKit
@@ -15,66 +13,35 @@ class GameViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    let PhysicsCategorySphere = 1 << 0
 
-    // create a new scene
-    let scene = SCNScene() //named: "art.scnassets/ship.dae")!
+    let scene = SCNScene()
     
-    // create and add a camera to the scene
+    // Create and add a camera to the scene
     let cameraNode = SCNNode()
     cameraNode.camera = SCNCamera()
     scene.rootNode.addChildNode(cameraNode)
     
-    // place the camera
+    // Place the camera
     cameraNode.position = SCNVector3(x: 0, y: 0, z: 15)
     
-    scene.physicsWorld.gravity = SCNVector3(x: 0, y: 0, z: 0)
     
-    
-    // create and add a light to the scene
-    /*
-    let lightNode = SCNNode()
-    lightNode.light = SCNLight()
-    lightNode.light!.type = SCNLightTypeOmni
-    lightNode.position = SCNVector3(x: 0, y: 10, z: 10)
-    scene.rootNode.addChildNode(lightNode)
-    */
-    
-    /*
-    // create and add an ambient light to the scene
-    let ambientLightNode = SCNNode()
-    ambientLightNode.light = SCNLight()
-    ambientLightNode.light!.type = SCNLightTypeAmbient
-    ambientLightNode.light!.color = UIColor.darkGrayColor()
-    scene.rootNode.addChildNode(ambientLightNode)
-    */
-    
-
-    
-    
-    let ematerial = SCNMaterial()
-    ematerial.diffuse.contents = UIImage(named: "art.scnassets/earth.png")
-    
-    
-    let earthNode = SCNNode()
-    let sphere = SCNSphere(radius: 2.0)
+    let earthNode      = SCNNode()
+    let earthSphere    = SCNSphere(radius: 2.0)
     earthNode.position = SCNVector3(x: 0, y: 0, z: 0)
-    earthNode.geometry = sphere
-    earthNode.physicsBody = SCNPhysicsBody.dynamicBody()
-    earthNode.physicsBody?.mass = 5.972
-    sphere.materials = [ematerial]
-    scene.rootNode.addChildNode(earthNode)
+    earthNode.geometry = earthSphere
     
-    let moonMap = SCNMaterial()
-    moonMap.diffuse.contents = UIImage(named: "art.scnassets/moon.jpg")
+    let earthMap = SCNMaterial()
+    earthMap.diffuse.contents = UIImage(named: "art.scnassets/earth.png")
+
+    earthSphere.materials = [earthMap]
+    scene.rootNode.addChildNode(earthNode)
+
     
     let moonSphere = SCNSphere(radius: 0.55)
     let moonNode = SCNNode(geometry: moonSphere)
-    moonNode.position = SCNVector3(x: 20.0, y: 0.0, z: 0.0)
-    moonNode.physicsBody = SCNPhysicsBody.dynamicBody()
-    moonNode.physicsBody?.mass = 5.972/160
-    moonNode.physicsBody?.velocity = SCNVector3(x: 0, y: 4, z: 0)
-
+    let moonMap = SCNMaterial()
+    moonNode.position = SCNVector3(x: 10, y: 0.0, z: 0.0)
+    moonMap.diffuse.contents = UIImage(named: "art.scnassets/moon.jpg")
     moonSphere.materials = [moonMap]
     scene.rootNode.addChildNode(moonNode)
     
@@ -83,7 +50,7 @@ class GameViewController: UIViewController {
     let earthRotation = CABasicAnimation(keyPath: "eulerAngles")
     earthRotation.fromValue = NSValue(SCNVector3: SCNVector3(x: 0, y: 0, z: TILT_EARTH_AXIS))
     earthRotation.toValue =   NSValue(SCNVector3: SCNVector3(x: 0.0, y: Float(2*M_PI), z:TILT_EARTH_AXIS))
-    earthRotation.duration = 3
+    earthRotation.duration = 5
     earthRotation.repeatCount = .infinity
     earthNode.addAnimation(earthRotation, forKey: "eulerAngles")
     
@@ -96,15 +63,11 @@ class GameViewController: UIViewController {
     moonRotation.repeatCount = .infinity
     moonNode.addAnimation(moonRotation, forKey: "eulerAngles")
     
-    let earthsGravity = SCNPhysicsField.radialGravityField()
-    earthsGravity.categoryBitMask = 1
-    earthsGravity.strength = 9.8
-    earthNode.physicsField = earthsGravity
-
-
-    let moonsGravity = SCNPhysicsField.radialGravityField()
-    moonsGravity.strength = 1.62519
-    moonNode.physicsField = moonsGravity
+    let moonOrbit = CAKeyframeAnimation(keyPath: "position")
+    moonOrbit.values = moonOrbitArray()
+    moonOrbit.repeatCount = .infinity
+    moonOrbit.duration = 27
+    moonNode.addAnimation(moonOrbit, forKey: "position")
     
     // retrieve the SCNView
     let scnView = self.view as! SCNView
@@ -116,53 +79,38 @@ class GameViewController: UIViewController {
     scnView.allowsCameraControl = true
     
     // show statistics such as fps and timing information
-    scnView.showsStatistics = true
+    //    scnView.showsStatistics = true
     
     // configure the view
-    scnView.backgroundColor = UIColor.blackColor()
+//    scnView.backgroundColor = UIColor.blackColor()
+        scnView.backgroundColor = UIColor.whiteColor()
     
     scnView.autoenablesDefaultLighting = true
     
    }
   
-//  func
-  
-  func handleTap(gestureRecognize: UIGestureRecognizer) {
-    // retrieve the SCNView
-    let scnView = self.view as! SCNView
+  func moonOrbitArray() -> [NSValue] {
     
-    // check what nodes are tapped
-    let p = gestureRecognize.locationInView(scnView)
-    if let hitResults = scnView.hitTest(p, options: nil) {
-      // check that we clicked on at least one object
-      if hitResults.count > 0 {
-        // retrieved the first clicked object
-        let result: AnyObject! = hitResults[0]
-        
-        // get its material
-        let material = result.node!.geometry!.firstMaterial!
-        
-        // highlight it
-        SCNTransaction.begin()
-        SCNTransaction.setAnimationDuration(0.5)
-        
-        // on completion - unhighlight
-        SCNTransaction.setCompletionBlock {
-          SCNTransaction.begin()
-          SCNTransaction.setAnimationDuration(0.5)
-          
-          material.emission.contents = UIColor.blackColor()
-          
-          SCNTransaction.commit()
-        }
-        
-        material.emission.contents = UIColor.redColor()
-        
-        SCNTransaction.commit()
-      }
+    var values = [NSValue]()
+    let r:Double = 10
+
+    for var phi:Double = 0.0; phi < 2*M_PI; phi += 0.19 {
+      
+      println("phi = \(phi)")
+      
+      var x = r*cos(phi)
+      var y = r*sin(phi)
+      var v = NSValue(SCNVector3:SCNVector3Make(Float(x), Float(y), 0))
+      
+      values.append(v)
+      
     }
+    
+    return values
+    
   }
-  
+
+
   override func shouldAutorotate() -> Bool {
     return true
   }
