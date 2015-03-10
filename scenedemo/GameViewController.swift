@@ -30,21 +30,25 @@ class GameViewController: UIViewController {
     earthNode.position = SCNVector3(x: 0, y: 0, z: 0)
     earthNode.geometry = earthSphere
     
-    let earthMap = SCNMaterial()
-    earthMap.diffuse.contents = UIImage(named: "art.scnassets/earth.png")
+    //let earthMap = SCNMaterial()
+    //earthMap.diffuse.contents = UIImage(named: "art.scnassets/earth.png")
 
-    earthSphere.materials = [earthMap]
+    //earthSphere.materials = [earthMap]
     scene.rootNode.addChildNode(earthNode)
 
     
     let moonSphere = SCNSphere(radius: 0.55)
     let moonNode = SCNNode(geometry: moonSphere)
-    let moonMap = SCNMaterial()
-    moonNode.position = SCNVector3(x: 10, y: 0.0, z: 0.0)
-    moonMap.diffuse.contents = UIImage(named: "art.scnassets/moon.jpg")
-    moonSphere.materials = [moonMap]
+//    let moonMap = SCNMaterial()
+    moonNode.position = SCNVector3(x: 8, y: 0.0, z: 0.0)
+//    moonMap.diffuse.contents = UIImage(named: "art.scnassets/moon.jpg")
+//    moonSphere.materials = [moonMap]
     scene.rootNode.addChildNode(moonNode)
     
+    let ANIMATION = false
+    
+    if ANIMATION {
+      
     let TILT_EARTH_AXIS:Float = 0.4101523742
     
     let earthRotation = CABasicAnimation(keyPath: "eulerAngles")
@@ -64,10 +68,11 @@ class GameViewController: UIViewController {
     moonNode.addAnimation(moonRotation, forKey: "eulerAngles")
     
     let moonOrbit = CAKeyframeAnimation(keyPath: "position")
-    moonOrbit.values = moonOrbitArray()
+    moonOrbit.values = moonOrbitArray(8)
     moonOrbit.repeatCount = .infinity
     moonOrbit.duration = 27
     moonNode.addAnimation(moonOrbit, forKey: "position")
+    }
     
     // retrieve the SCNView
     let scnView = self.view as! SCNView
@@ -89,10 +94,10 @@ class GameViewController: UIViewController {
     
    }
   
-  func moonOrbitArray() -> [NSValue] {
+  func moonOrbitArray(xLocation:Double) -> [NSValue] {
     
     var values = [NSValue]()
-    let r:Double = 10
+    let r:Double = xLocation
 
     for var phi:Double = 0.0; phi < 2*M_PI; phi += 0.19 {
       
