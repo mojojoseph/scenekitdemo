@@ -104,8 +104,8 @@ class GameViewController: UIViewController {
       println("phi = \(phi)")
       
       var x = r*cos(phi)
-      var y = r*sin(phi)
-      var v = NSValue(SCNVector3:SCNVector3Make(Float(x), Float(y), 0))
+      var z = -r*sin(phi)
+      var v = NSValue(SCNVector3:SCNVector3Make(Float(x), 0, Float(z)))
       
       values.append(v)
       
