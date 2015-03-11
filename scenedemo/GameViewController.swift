@@ -30,48 +30,48 @@ class GameViewController: UIViewController {
     earthNode.position = SCNVector3(x: 0, y: 0, z: 0)
     earthNode.geometry = earthSphere
     
-    //let earthMap = SCNMaterial()
-    //earthMap.diffuse.contents = UIImage(named: "art.scnassets/earth.png")
-
-    //earthSphere.materials = [earthMap]
+    let earthMap = SCNMaterial()
+    earthMap.diffuse.contents = UIImage(named: "art.scnassets/earth.png")
+    earthSphere.materials = [earthMap]
     scene.rootNode.addChildNode(earthNode)
 
     
     let moonSphere = SCNSphere(radius: 0.55)
     let moonNode = SCNNode(geometry: moonSphere)
-//    let moonMap = SCNMaterial()
+    let moonMap = SCNMaterial()
     moonNode.position = SCNVector3(x: 8, y: 0.0, z: 0.0)
-//    moonMap.diffuse.contents = UIImage(named: "art.scnassets/moon.jpg")
-//    moonSphere.materials = [moonMap]
+    moonMap.diffuse.contents = UIImage(named: "art.scnassets/moon.jpg")
+    moonSphere.materials = [moonMap]
     scene.rootNode.addChildNode(moonNode)
     
-    let ANIMATION = false
+    let ANIMATION = true
     
     if ANIMATION {
       
-    let TILT_EARTH_AXIS:Float = 0.4101523742
-    
-    let earthRotation = CABasicAnimation(keyPath: "eulerAngles")
-    earthRotation.fromValue = NSValue(SCNVector3: SCNVector3(x: 0, y: 0, z: TILT_EARTH_AXIS))
-    earthRotation.toValue =   NSValue(SCNVector3: SCNVector3(x: 0.0, y: Float(2*M_PI), z:TILT_EARTH_AXIS))
-    earthRotation.duration = 5
-    earthRotation.repeatCount = .infinity
-    earthNode.addAnimation(earthRotation, forKey: "eulerAngles")
-    
-    let TILT_MOON_AXIS:Float = 0.02617993878
-    
-    let moonRotation = CABasicAnimation(keyPath: "eulerAngles")
-    moonRotation.fromValue = NSValue(SCNVector3: SCNVector3(x: 0, y: 0, z: TILT_MOON_AXIS))
-    moonRotation.toValue =   NSValue(SCNVector3: SCNVector3(x: 0.0, y: Float(2*M_PI), z:TILT_MOON_AXIS))
-    moonRotation.duration = 3*27
-    moonRotation.repeatCount = .infinity
-    moonNode.addAnimation(moonRotation, forKey: "eulerAngles")
-    
-    let moonOrbit = CAKeyframeAnimation(keyPath: "position")
-    moonOrbit.values = moonOrbitArray(8)
-    moonOrbit.repeatCount = .infinity
-    moonOrbit.duration = 27
-    moonNode.addAnimation(moonOrbit, forKey: "position")
+      let SECONDS_FOR_EARTH_REVOLUTION:CFTimeInterval = 1
+      let TILT_EARTH_AXIS:Float = 0.4101523742
+      
+      let earthRotation = CABasicAnimation(keyPath: "eulerAngles")
+      earthRotation.fromValue = NSValue(SCNVector3: SCNVector3(x: 0, y: 0, z: TILT_EARTH_AXIS))
+      earthRotation.toValue =   NSValue(SCNVector3: SCNVector3(x: 0.0, y: Float(2*M_PI), z:TILT_EARTH_AXIS))
+      earthRotation.duration    = SECONDS_FOR_EARTH_REVOLUTION
+      earthRotation.repeatCount = .infinity
+      earthNode.addAnimation(earthRotation, forKey: "eulerAngles")
+      
+      let TILT_MOON_AXIS:Float = 0.02617993878
+      
+      let moonRotation = CABasicAnimation(keyPath: "eulerAngles")
+      moonRotation.fromValue = NSValue(SCNVector3: SCNVector3(x: 0, y: 0, z: TILT_MOON_AXIS))
+      moonRotation.toValue =   NSValue(SCNVector3: SCNVector3(x: 0.0, y: Float(2*M_PI), z:TILT_MOON_AXIS))
+      moonRotation.duration = SECONDS_FOR_EARTH_REVOLUTION*27
+      moonRotation.repeatCount = .infinity
+      moonNode.addAnimation(moonRotation, forKey: "eulerAngles")
+      
+      let moonOrbit = CAKeyframeAnimation(keyPath: "position")
+      moonOrbit.values = moonOrbitArray(8)
+      moonOrbit.repeatCount = .infinity
+      moonOrbit.duration = SECONDS_FOR_EARTH_REVOLUTION*27
+      moonNode.addAnimation(moonOrbit, forKey: "position")
     }
     
     // retrieve the SCNView
