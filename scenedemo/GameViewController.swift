@@ -48,8 +48,8 @@ class GameViewController: UIViewController {
     
     if ANIMATION {
       
-      let SECONDS_FOR_EARTH_REVOLUTION:CFTimeInterval = 1
-      let TILT_EARTH_AXIS:Float = 0.4101523742
+      let SECONDS_FOR_EARTH_REVOLUTION:CFTimeInterval = 24
+      let TILT_EARTH_AXIS:Float = -0.4101523742
       
       let earthRotation = CABasicAnimation(keyPath: "eulerAngles")
       earthRotation.fromValue = NSValue(SCNVector3: SCNVector3(x: 0, y: 0, z: TILT_EARTH_AXIS))
@@ -101,7 +101,7 @@ class GameViewController: UIViewController {
 
     for var phi:Double = 0.0; phi < 2*M_PI; phi += 0.19 {
       
-      println("phi = \(phi)")
+      //println("phi = \(phi)")
       
       var x = r*cos(phi)
       var z = -r*sin(phi)
