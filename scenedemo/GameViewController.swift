@@ -44,7 +44,7 @@ class GameViewController: UIViewController {
     moonSphere.materials = [moonMap]
     scene.rootNode.addChildNode(moonNode)
     
-    let ANIMATION = true
+    let ANIMATION = false
     
     if ANIMATION {
       
