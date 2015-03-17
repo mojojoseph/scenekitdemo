@@ -49,7 +49,7 @@ class GameViewController: UIViewController {
     if ANIMATION {
       
       let SECONDS_FOR_EARTH_REVOLUTION:CFTimeInterval = 1
-      let TILT_EARTH_AXIS:Float = 0.4101523742
+      let TILT_EARTH_AXIS:Float = -0.4101523742
       
       let earthRotation = CABasicAnimation(keyPath: "eulerAngles")
       earthRotation.fromValue = NSValue(SCNVector3: SCNVector3(x: 0, y: 0, z: TILT_EARTH_AXIS))
@@ -74,6 +74,54 @@ class GameViewController: UIViewController {
       moonNode.addAnimation(moonOrbit, forKey: "position")
     }
     
+    let sat1Sphere = SCNSphere(radius: 0.05)
+    sat1Sphere.firstMaterial?.diffuse.contents = UIColor.yellowColor()
+    let sat1Node = SCNNode(geometry: sat1Sphere)
+    sat1Node.position = SCNVector3(x: 3, y: 0.0, z: 0.0)
+    scene.rootNode.addChildNode(sat1Node)
+    let o1 = CAKeyframeAnimation(keyPath: "position")
+    o1.values = satelliteOrbitArray(radius: 3, phi: 0.52)
+    o1.repeatCount = .infinity
+    o1.duration = 5
+    sat1Node.addAnimation(o1, forKey: "position")
+
+    let sat2Sphere = SCNSphere(radius: 0.05)
+    sat2Sphere.firstMaterial?.diffuse.contents = UIColor.yellowColor()
+
+    let sat2Node = SCNNode(geometry: sat2Sphere)
+    sat2Node.position = SCNVector3(x: 4, y: 0.0, z: 0.0)
+    scene.rootNode.addChildNode(sat2Node)
+    let o2 = CAKeyframeAnimation(keyPath: "position")
+    o2.values = satelliteOrbitArray(radius: 4, phi: 1.04)
+    o2.repeatCount = .infinity
+    o2.duration = 10
+    sat2Node.addAnimation(o2, forKey: "position")
+
+    let sat3Sphere = SCNSphere(radius: 0.05)
+    sat3Sphere.firstMaterial?.diffuse.contents = UIColor.yellowColor()
+
+    let sat3Node = SCNNode(geometry: sat3Sphere)
+    sat3Node.position = SCNVector3(x: 5, y: 0.0, z: 0.0)
+    scene.rootNode.addChildNode(sat3Node)
+    let o3 = CAKeyframeAnimation(keyPath: "position")
+    o3.values = satelliteOrbitArray(radius: 5, phi: 1.56)
+    o3.repeatCount = .infinity
+    o3.duration = 15
+    sat3Node.addAnimation(o3, forKey: "position")
+    
+    let sat4Sphere = SCNSphere(radius: 0.05)
+    sat4Sphere.firstMaterial?.diffuse.contents = UIColor.yellowColor()
+
+    let sat4Node = SCNNode(geometry: sat4Sphere)
+    sat4Node.position = SCNVector3(x: 5.5, y: 0.0, z: 0.0)
+    scene.rootNode.addChildNode(sat4Node)
+    let o4 = CAKeyframeAnimation(keyPath: "position")
+    o4.values = satelliteOrbitArray(radius: 5.5, phi: 2.09)
+    o4.repeatCount = .infinity
+    o4.duration = 20
+    sat4Node.addAnimation(o4, forKey: "position")
+
+    
     // retrieve the SCNView
     let scnView = self.view as! SCNView
     
@@ -87,15 +135,14 @@ class GameViewController: UIViewController {
     //    scnView.showsStatistics = true
     
     // configure the view
-//    scnView.backgroundColor = UIColor.blackColor()
-        scnView.backgroundColor = UIColor.whiteColor()
+    scnView.backgroundColor = UIColor.blackColor()
+    //scnView.backgroundColor = UIColor.whiteColor()
     
     scnView.autoenablesDefaultLighting = true
     
    }
   
   func moonOrbitArray(xLocation:Double) -> [NSValue] {
-    
     var values = [NSValue]()
     let r:Double = xLocation
 
@@ -108,7 +155,23 @@ class GameViewController: UIViewController {
       var v = NSValue(SCNVector3:SCNVector3Make(Float(x), 0, Float(z)))
       
       values.append(v)
+
+    }
+    
+    return values
+  }
+  
+  func satelliteOrbitArray(#radius:Double, phi:Double) -> [NSValue] {
+    var values = [NSValue]()
+    let r = radius
+    for var theta:Double = 0.0; theta < 2*M_PI; theta += 0.19 {
+      var x = r*sin(theta)*cos(phi)
+      var y = r*sin(theta)*sin(phi)
+      var z = r*cos(theta)
+      var v = NSValue(SCNVector3:SCNVector3Make(Float(x), Float(y), Float(z)))
       
+      values.append(v)
+
     }
     
     return values

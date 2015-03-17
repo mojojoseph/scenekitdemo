@@ -413,6 +413,7 @@
 				0C34C78E1AAA8185001F1A8B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		0C34C78F1AAA8185001F1A8B /* Build configuration list for PBXNativeTarget "scenedemoTests" */ = {
 			isa = XCConfigurationList;
@@ -421,6 +422,7 @@
 				0C34C7911AAA8185001F1A8B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
