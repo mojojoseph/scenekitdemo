@@ -49,7 +49,7 @@ class GameViewController: UIViewController {
     
     if ANIMATION {
       
-    let TILT_EARTH_AXIS:Float = 0.4101523742
+    let TILT_EARTH_AXIS:Float = -0.4101523742
     
     let earthRotation = CABasicAnimation(keyPath: "eulerAngles")
     earthRotation.fromValue = NSValue(SCNVector3: SCNVector3(x: 0, y: 0, z: TILT_EARTH_AXIS))
